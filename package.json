@@ -4,10 +4,9 @@
   "description": "hodgepodge",
   "scripts": {
     "build": "tsc",
-    "buildSdk": "rm -rf dist && mkdir dist && cp -r ./neo-sdk ./dist/neo-sdk",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "npm run buildSdk && npm run build && electron ./dist/main.js"
+    "start": "npm run build && electron ./dist/main.js"
   },
   "keywords": [
     "Electron",

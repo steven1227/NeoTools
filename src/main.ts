@@ -16,7 +16,7 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, "../html/index.html"));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
@@ -50,7 +50,7 @@ ipcMain.on('createNewWin',(_,name)=>{
         },
         parent: mainWindow, //win是主窗口
     });
-    newWindow.webContents.openDevTools();
+    // newWindow.webContents.openDevTools();
     newWindow.loadURL(path.join('file:',__dirname,`../html/${name}.html`));
     newWindow.on('closed',()=>{newWindow = null})
 });
