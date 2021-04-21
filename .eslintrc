@@ -1,0 +1,17 @@
+{
+  "rules": {
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/triple-slash-reference ": "off"
+    /* eslint-disable no-var */
+  },
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ]
+}

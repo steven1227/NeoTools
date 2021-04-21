@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "suppressImplicitAnyIndexErrors":true,
+    "declaration": true,
+    "paths": {
+      "*": ["node_modules/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
+// {
+//   "compilerOptions": {
+//       "target": "es5", //defines what sort of code ts generates, es5 because it's what most browsers currently UNDERSTANDS.
+//       "module": "commonjs",
+//       "moduleResolution": "node",
+//       "sourceMap": true,
+//       "emitDecoratorMetadata": true, //for angular to be able to use metadata we specify in our components.
+//       "experimentalDecorators": true, //angular needs decorators like @Component, @Injectable, etc.
+//       "removeComments": false,
+//       "noImplicitAny": false,
+//       "outDir": "dist",
+//       "lib": [
+//           "es2016",
+//           "dom",
+//           "es5"
+//       ]
+//   },
+//   "include": [
+//     "src/**/*"
+//   , "app"  ]
+// }

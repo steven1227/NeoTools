@@ -1,0 +1,14 @@
+#box{
+    display: flex;
+    display: -webkit-flex;
+    border: 1px solid #0000FF;
+    height: 200px;
+    width: 400px;
+    align-items:center;
+    justify-content:center;
+}
+.item{
+    width: 50px;
+    height: 40px;
+    border: 1px solid #00C1B3;
+}
