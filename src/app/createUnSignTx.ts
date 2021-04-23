@@ -14,18 +14,15 @@ namespace App {
             div.style.position = "absolute";
             div.style.overflow = "hidden";
             document.body.appendChild(div);
-            div.id = "box";
 
             let label = document.createElement("label");
             div.appendChild(label);
             label.textContent = "发起交易地址：";
-            label.className = "item";
             const input_sender = document.createElement("input");
             div.appendChild(input_sender);
             input_sender.style.width = "500px";
             input_sender.style.position = "absoulte";
             input_sender.multiple = true;
-            input_sender.className = "item";
             input_sender.value = "AGCcgY7dnykAkJbYqhKjKCTKPygvTKWVv9";
             div.appendChild(document.createElement("br"));
 
@@ -45,20 +42,17 @@ namespace App {
             label = document.createElement("label");
             div.appendChild(label);
             label.textContent = "调用合约地址：";
-            label.className = "item";
             const input_scHash = document.createElement("input");
             div.appendChild(input_scHash);
             input_scHash.style.width = "500px";
             input_scHash.style.position = "absoulte";
             input_scHash.multiple = true;
-            input_scHash.className = "item";
             input_scHash.value = "0x74f2dc36a68fdc4682034178eb2220729231db76";
             div.appendChild(document.createElement("br"));
 
             label = document.createElement("label");
             div.appendChild(label);
             label.textContent = "调用合约参数：";
-            label.className = "item";
             const text_scParams = document.createElement("textarea");
             div.appendChild(text_scParams);
             text_scParams.style.width = "1000px";
@@ -72,7 +66,6 @@ namespace App {
     ]
 ]`;
             text_scParams.textContent = defaultParams;
-            text_scParams.className = "item";
             div.appendChild(document.createElement("br"));
 
             // label = document.createElement("label");
@@ -102,7 +95,6 @@ namespace App {
             const btn_ok = document.createElement("button");
             div.appendChild(btn_ok);
             btn_ok.textContent = "生成交易（交易未签名，如需发送上链还需要签名）：";
-            btn_ok.className = "item";
             div.appendChild(document.createElement("br"));
 
             const text_tran = document.createElement("textarea");
@@ -110,7 +102,6 @@ namespace App {
             text_tran.style.width = "1000px";
             text_tran.style.height = "100px";
             text_tran.textContent = "";
-            text_tran.className = "item";
             div.appendChild(document.createElement("br"));
 
         

@@ -2,11 +2,12 @@
   "name": "neotools",
   "version": "1.0.0",
   "description": "hodgepodge",
+  "main":"dist/main.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npx electron-builder -mw",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "tsc && electron ./dist/main.js"
   },
   "keywords": [
     "Electron",
@@ -16,12 +17,26 @@
     "demo",
     "typescript"
   ],
+  "build": {
+    "files": [
+      "dist/**/*",
+      "html/**/*",
+      "neo-sdk/**/*",
+      "node_modules/**/*"
+    ],
+    "directories":{
+      "buildResources": "assets",
+      "output":"build"
+    }
+  },
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^3.4.0",
     "electron": "^9.4.0",
+    "electron-builder": "^22.10.5",
+    "electron-compile": "^6.4.4",
     "eslint": "^7.3.1",
     "typescript": "^3.9.5"
   }

@@ -8,6 +8,7 @@ var App;
     class Menu {
         start() {
             this.createMenu();
+            this.addMenuItem("convert");
             this.addMenuItem("createUnSignTx");
             this.addMenuItem("createMulti");
             this.addMenuItem("createAndSignMulti");

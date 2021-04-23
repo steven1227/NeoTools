@@ -10,6 +10,7 @@ namespace App {
         start(): void
         {
             this.createMenu();
+            this.addMenuItem("convert");
             this.addMenuItem("createUnSignTx");
             this.addMenuItem("createMulti");
             this.addMenuItem("createAndSignMulti");

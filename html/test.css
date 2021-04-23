@@ -1,0 +1,51 @@
+#box{
+    display: flex;
+    display: -webkit-flex;
+    border: 1px solid #0000FF;
+    height: 200px;
+    width: 400px;
+    align-items:center;
+    justify-content:center;
+}
+.item{
+    width: 50px;
+    height: 40px;
+    border: 1px solid #00C1B3;
+}
+
+.password{
+position: relative;
+width: 280px;
+height: 60px;
+}
+.password,.n-txtCss{
+display: flex;
+align-items: center;
+}
+.password .fa{
+position: absolute;
+right: 10px;
+top:15px;
+font-size: 20px;
+cursor: pointer;
+}
+
+.fa-eye-slash{
+margin-top: 6px;
+margin-left: 7px;
+width: 24px;
+height: 20px;
+background-image: url(./vivo_img/login/eye-password.png);
+background-repeat: no-repeat;
+background-size: 24px 17px;
+}
+.fa-eye{
+margin-top: 6px;
+width: 24px;
+margin-left: 7px;
+height: 20px;
+background-image: url(./vivo_img/login/eye-password-active.png);
+background-repeat: no-repeat;
+background-size: 24px 17px;
+
+}

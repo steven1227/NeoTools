@@ -22,7 +22,6 @@ namespace App {
             div.style.position = "absolute";
             div.style.overflow = "hidden";
             document.body.appendChild(div);
-            div.id = "box";
 
             this.keys = new Array<key>();
             this.key = new key();
@@ -49,6 +48,7 @@ namespace App {
             input_pw.style.position = "absoulte";
             input_pw.multiple = true;
             input_pw.value = "";
+            input_pw.type = "password";
             const btn_login = document.createElement("button");
             btn_login.textContent = "登陆";
             div.appendChild(btn_login);
