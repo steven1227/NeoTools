@@ -48,7 +48,8 @@ declare namespace App {
         static url: string;
         static makeRpcUrl(url: string, method: string, ..._params: any[]): string;
         static makeRpcPostBody(method: string, ..._params: any[]): any;
-        static getunspents(addr: string): Promise<any>;
-        static getUtxosByAddress(addr: string): Promise<Map<string, Utxo[]>>;
+        static send(url: string, raw: string): Promise<any>;
+        static getunspents(url: string, addr: string): Promise<any>;
+        static getUtxosByAddress(url: string, addr: string): Promise<Map<string, Utxo[]>>;
     }
 }

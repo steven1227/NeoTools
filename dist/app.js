@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 ///<reference path="../dist/neo-sdk/neo-ts.d.ts"/>
+const electron_1 = require("electron");
 var App;
 (function (App) {
     class Menu {

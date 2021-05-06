@@ -1,5 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 ///<reference path="../../dist/neo-sdk/neo-ts.d.ts"/>
+// import {key, Tx, KeyType, KeyInfo} from "./lib";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var App;
 (function (App) {
     window.onload = () => {
@@ -17,7 +27,7 @@ var App;
             div.style.top = "50px";
             div.style.bottom = "50px";
             div.style.position = "absolute";
-            div.style.overflow = "hidden";
+            div.style.overflow = "auto";
             document.body.appendChild(div);
             this.keys = new Array();
             this.key = new App.key();
@@ -70,6 +80,7 @@ var App;
             text_addrs.style.width = "800px";
             text_addrs.style.height = "100px";
             text_addrs.textContent = "";
+            text_addrs.readOnly = true;
             div.appendChild(document.createElement("br"));
             label = document.createElement("label");
             div.appendChild(label);
@@ -79,7 +90,7 @@ var App;
             input_count.style.width = "500px";
             input_count.style.position = "absoulte";
             input_count.multiple = true;
-            input_count.value = "";
+            input_count.value = "2";
             const btn_ok = document.createElement("button");
             div.appendChild(btn_ok);
             btn_ok.textContent = "ok";
@@ -93,27 +104,29 @@ var App;
             text_account.style.width = "1000px";
             text_account.style.height = "100px";
             text_account.textContent = "";
+            text_account.readOnly = true;
             div.appendChild(document.createElement("hr"));
-            label = document.createElement("label");
-            div.appendChild(label);
-            label.textContent = "将未完成签名的数据填入下方的文本中，签名后的数据可以复制给其他密钥掌握者接着签名";
-            div.appendChild(document.createElement("br"));
+            const p = document.createElement("p");
+            div.appendChild(p);
+            p.textContent = "将未签名的数据复制到下方的文本中，签名后复制给其他密钥掌握者";
+            p.style.color = "red";
             const text_data = document.createElement("textarea");
             div.appendChild(text_data);
             text_data.style.width = "1000px";
             text_data.style.height = "100px";
             text_data.value = "";
             div.appendChild(document.createElement("br"));
-            const btn_import = document.createElement("button");
-            div.appendChild(btn_import);
-            btn_import.textContent = "导入数据";
-            div.appendChild(document.createElement("hr"));
-            const text_tx = document.createElement("textarea");
-            div.appendChild(text_tx);
-            text_tx.style.width = "1000px";
-            text_tx.style.height = "100px";
-            text_tx.textContent = "";
-            div.appendChild(document.createElement("br"));
+            // const btn_import = document.createElement("button");
+            // div.appendChild(btn_import);
+            // btn_import.textContent = "导入数据";
+            // div.appendChild(document.createElement("hr"));
+            // const text_tx = document.createElement("textarea");
+            // div.appendChild(text_tx);
+            // text_tx.style.width = "1000px";
+            // text_tx.style.height = "100px";
+            // text_tx.textContent = "";
+            // text_tx.readOnly = true;
+            // div.appendChild(document.createElement("br"));
             const btn_sign = document.createElement("button");
             div.appendChild(btn_sign);
             btn_sign.textContent = "签名(需要先点‘导入数据’让上面的文本框有值)";
@@ -124,13 +137,23 @@ var App;
             label.textContent = "！！！一定要签名数量足够后再点击后方的按钮，否则数据无效";
             const btn_export = document.createElement("button");
             div.appendChild(btn_export);
-            btn_export.textContent = "导出上链数据";
+            btn_export.textContent = "生成上链数据";
             div.appendChild(document.createElement("br"));
             const text_rawdata = document.createElement("textarea");
             div.appendChild(text_rawdata);
             text_rawdata.style.width = "1000px";
             text_rawdata.style.height = "100px";
             text_rawdata.value = "";
+            text_rawdata.readOnly = true;
+            const input_cliAddr = document.createElement("input");
+            div.appendChild(input_cliAddr);
+            input_cliAddr.style.width = "500px";
+            input_cliAddr.style.position = "absoulte";
+            input_cliAddr.multiple = true;
+            input_cliAddr.value = "http://seed2.ngd.network:10332";
+            const btn_send = document.createElement("button");
+            div.appendChild(btn_send);
+            btn_send.textContent = "上链";
             div.appendChild(document.createElement("hr"));
             let wallet;
             const reader = new FileReader();
@@ -157,8 +180,8 @@ var App;
                         }
                         wallet.accounts[num].getPrivateKey(wallet.scrypt, input_pw.value, (info, result) => {
                             try {
-                                alert(info);
                                 if (info == "finish") {
+                                    alert("导入成功");
                                     const priKey = result;
                                     const _key = new App.key();
                                     _key.MKey_NeedCount = 0;
@@ -178,7 +201,11 @@ var App;
                                     addPrikey(num, wallet);
                                 }
                                 else {
-                                    console.log(result);
+                                    alert("地址密钥不符");
+                                    num = num + 1;
+                                    if (wallet.accounts.length <= num)
+                                        return;
+                                    addPrikey(num, wallet);
                                 }
                             }
                             catch (e) {
@@ -212,11 +239,17 @@ var App;
                 this.keys.push(this.key);
                 updateUI();
             };
-            btn_import.onclick = () => {
+            // btn_import.onclick = ()=>{
+            //     this.tx.FromString(this.keys, text_data.value);
+            //     updateUI();
+            // };
+            btn_sign.onclick = () => {
+                if (text_data.value == "") {
+                    alert("请先构造交易并导入");
+                    return;
+                }
                 this.tx.FromString(this.keys, text_data.value);
                 updateUI();
-            };
-            btn_sign.onclick = () => {
                 let signcount = 0;
                 const data = this.tx.txraw.GetMessage();
                 console.log(this.keys.length);
@@ -250,13 +283,36 @@ var App;
                     alert("没有找到可以签名的");
                 }
                 else {
-                    updateTxUI();
+                    // updateTxUI();
                     updateDataUI();
                 }
             };
             btn_export.onclick = () => {
                 updateDataUI(false);
             };
+            btn_send.onclick = () => __awaiter(this, void 0, void 0, function* () {
+                let raw = text_rawdata.value;
+                if (raw == "") {
+                    if (this.tx.HasAllKeyInfo) {
+                        this.tx.FillRaw();
+                        const str = this.tx.txraw.GetRawData().toHexString();
+                        text_rawdata.value = `${str}`;
+                    }
+                    else {
+                        alert("签名信息不完整");
+                        return;
+                    }
+                }
+                raw = text_rawdata.value;
+                const result = yield App.NeoRpc.send(input_cliAddr.value, raw);
+                if (JSON.stringify(result) == "true") {
+                    const txid = this.tx.txraw.GetHash().reverse().toHexString();
+                    alert(`txid:${txid}`);
+                }
+                else {
+                    alert(JSON.stringify(result));
+                }
+            });
             const updateUI = () => {
                 //更新账户
                 text_account.textContent = "";
@@ -275,39 +331,39 @@ var App;
                     if (this.tx != null) {
                         this.tx.ImportKeyInfo(this.keys, null);
                     }
-                    updateTxUI();
+                    // updateTxUI();
                 }
                 catch (e) {
                     console.log(e);
                 }
             };
-            const updateTxUI = () => {
-                text_tx.textContent = "";
-                if (this.tx == null) {
-                    text_tx.textContent = "null";
-                }
-                else {
-                    text_tx.textContent += ThinNeo.TransactionType[this.tx.txraw.type] + ":" + this.tx.txraw.GetHash().toHexString() + "\r\n";
-                    for (const k in this.tx.keyinfos) {
-                        text_tx.textContent += "\t" + k + ":" + App.KeyType[this.tx.keyinfos[k].type] + "\r\n";
-                        if (this.tx.keyinfos[k].type == App.KeyType.Unknow) {
-                            text_tx.textContent += "\t\t" + "<unknow count....>" + "\r\n";
-                        }
-                        if (this.tx.keyinfos[k].type == App.KeyType.Simple) {
-                            const signstr = this.tx.keyinfos[k].signdata[0] == null ? "<null>" : this.tx.keyinfos[k].signdata[0].toHexString();
-                            text_tx.textContent += "\t\t" + "sign0" + signstr + "\r\n";
-                        }
-                        if (this.tx.keyinfos[k].type == App.KeyType.MultiSign) {
-                            for (let i = 0; i < this.tx.keyinfos[k].MultiSignKey.MKey_Pubkeys.length; i++) {
-                                const pubkey = this.tx.keyinfos[k].MultiSignKey.MKey_Pubkeys[i];
-                                const address = ThinNeo.Helper.GetAddressFromPublicKey(pubkey);
-                                const signstr = this.tx.keyinfos[k].signdata[i] == null ? "<null>" : this.tx.keyinfos[k].signdata[i].toHexString();
-                                text_tx.textContent += "\t\t" + "sign" + i + ":" + address + "=" + signstr + "\r\n";
-                            }
-                        }
-                    }
-                }
-            };
+            // const updateTxUI = () => {
+            //     text_tx.textContent = "";
+            //     if (this.tx == null) {
+            //         text_tx.textContent = "null";
+            //     }
+            //     else {
+            //         text_tx.textContent += ThinNeo.TransactionType[this.tx.txraw.type] + ":" + this.tx.txraw.GetHash().toHexString() + "\r\n";
+            //         for (const k in this.tx.keyinfos) {
+            //             text_tx.textContent += "\t" + k + ":" + KeyType[(this.tx.keyinfos[k] as KeyInfo).type] + "\r\n";
+            //             if ((this.tx.keyinfos[k] as KeyInfo).type == KeyType.Unknow) {
+            //                 text_tx.textContent += "\t\t" + "<unknow count....>" + "\r\n";
+            //             }
+            //             if ((this.tx.keyinfos[k] as KeyInfo).type == KeyType.Simple) {
+            //                 const signstr = (this.tx.keyinfos[k] as KeyInfo).signdata[0] == null ? "<null>" : (this.tx.keyinfos[k] as KeyInfo).signdata[0].toHexString();
+            //                 text_tx.textContent += "\t\t" + "sign0" + signstr + "\r\n";
+            //             }
+            //             if ((this.tx.keyinfos[k] as KeyInfo).type == KeyType.MultiSign) {
+            //                 for (let i = 0; i < (this.tx.keyinfos[k] as KeyInfo).MultiSignKey.MKey_Pubkeys.length; i++) {
+            //                     const pubkey = (this.tx.keyinfos[k] as KeyInfo).MultiSignKey.MKey_Pubkeys[i];
+            //                     const address = ThinNeo.Helper.GetAddressFromPublicKey(pubkey);
+            //                     const signstr = (this.tx.keyinfos[k] as KeyInfo).signdata[i] == null ? "<null>" : (this.tx.keyinfos[k] as KeyInfo).signdata[i].toHexString();
+            //                     text_tx.textContent += "\t\t" + "sign" + i + ":" + address + "=" + signstr+ "\r\n";
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
             const updateDataUI = (type = true) => {
                 if (type) {
                     text_data.value = this.tx.ToString();
@@ -316,8 +372,9 @@ var App;
                     if (this.tx.HasAllKeyInfo) {
                         this.tx.FillRaw();
                         const str = this.tx.txraw.GetRawData().toHexString();
-                        const txid = this.tx.txraw.GetHash().reverse().toHexString();
-                        text_rawdata.value = `可以发送上链的数据:${str};交易id:${txid}`;
+                        // const txid = this.tx.txraw.GetHash().reverse().toHexString();
+                        // text_rawdata.value = `可以发送上链的数据:${str};交易id:${txid}`;
+                        text_rawdata.value = `${str}`;
                         // alert(`可以发送上链的数据:${str}     交易id:${txid}`);
                     }
                     else {

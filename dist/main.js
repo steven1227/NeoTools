@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.store = void 0;
 const electron_1 = require("electron");
+const ElectronStore = require("electron-store");
 const path = require("path");
 let mainWindow;
+exports.store = new ElectronStore();
 function createWindow() {
     // Create the browser window.
     mainWindow = new electron_1.BrowserWindow({
@@ -23,6 +26,9 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 electron_1.app.on("ready", () => {
     createWindow();
+    if (!exports.store.get("node")) {
+        exports.store.set("node", "http://seed2.ngd.network:10332");
+    }
     electron_1.app.on("activate", function () {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
@@ -51,6 +57,18 @@ electron_1.ipcMain.on('createNewWin', (_, name) => {
     // newWindow.webContents.openDevTools();
     newWindow.loadURL(path.join('file:', __dirname, `../html/${name}.html`));
     newWindow.on('closed', () => { newWindow = null; });
+});
+electron_1.ipcMain.on('store-get', (event, key) => {
+    const v = exports.store.get(key);
+    console.log(v);
+    event.returnValue = v;
+});
+// sets a key on the store
+electron_1.ipcMain.on('store-set', (event, key, value) => {
+    exports.store.set(key, value);
+});
+electron_1.ipcMain.on('store-reset', (event) => {
+    exports.store.clear();
 });
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

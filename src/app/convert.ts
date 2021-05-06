@@ -1,9 +1,10 @@
+
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 ///<reference path="../../dist/neo-sdk/neo-ts.d.ts"/>
+// import {key, TranHelper, NeoRpc} from "./lib";
 
-namespace App {
-
-   export class convert {
+namespace App{
+    export class convert {
         key: key;
         start(): void {
             const div = document.createElement("div");
@@ -12,9 +13,9 @@ namespace App {
             div.style.top = "50px";
             div.style.bottom = "50px";
             div.style.position = "absolute";
-            div.style.overflow = "hidden";
+            div.style.overflow = "auto";
             document.body.appendChild(div);
-
+    
             let label = document.createElement("label");
             div.appendChild(label);
             label.textContent = "wif转公钥：";
@@ -25,11 +26,11 @@ namespace App {
             input_wif.multiple = true;
             input_wif.value = "KwwJMvfFPcRx2HSgQRPviLv4wPrxRaLk7kfQntkH8kCXzTgAts8t";
             input_wif.type = "password";
-            let label_prikey = document.createElement("label");
+            const label_prikey = document.createElement("label");
             div.appendChild(label_prikey);
             label_prikey.textContent = "";
             div.appendChild(document.createElement("br"));
-
+    
             label = document.createElement("label");
             div.appendChild(label);
             label.textContent = "私钥转公钥：";
@@ -39,15 +40,16 @@ namespace App {
             input_prikey.style.position = "absoulte";
             input_prikey.multiple = true;
             input_prikey.value = "";
-            let label_pubkey = document.createElement("label");
+            input_prikey.type = "password";
+            const label_pubkey = document.createElement("label");
             div.appendChild(label_pubkey);
             label_pubkey.textContent = "";
             div.appendChild(document.createElement("br"));
-
+    
             const btn_convert = document.createElement("button");
             div.appendChild(btn_convert);
             btn_convert.textContent = "转换";
-
+    
             btn_convert.onclick = async () => {
                 try {
                     if (input_wif.value != ""){
@@ -65,12 +67,11 @@ namespace App {
                 
         }
     }
-
+    
     window.onload = () =>
     {
         const c = new convert();
         c.start();
     };
-
 }
 

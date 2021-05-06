@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 ///<reference path="../../dist/neo-sdk/neo-ts.d.ts"/>
+// import {key, TranHelper, NeoRpc} from "./lib";
 var App;
 (function (App) {
     class CreateMulti {
@@ -10,7 +11,7 @@ var App;
             div.style.top = "50px";
             div.style.bottom = "50px";
             div.style.position = "absolute";
-            div.style.overflow = "hidden";
+            div.style.overflow = "auto";
             document.body.appendChild(div);
             let label = document.createElement("label");
             div.appendChild(label);

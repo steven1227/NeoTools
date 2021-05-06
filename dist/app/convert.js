@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 ///<reference path="../../dist/neo-sdk/neo-ts.d.ts"/>
+// import {key, TranHelper, NeoRpc} from "./lib";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -19,7 +20,7 @@ var App;
             div.style.top = "50px";
             div.style.bottom = "50px";
             div.style.position = "absolute";
-            div.style.overflow = "hidden";
+            div.style.overflow = "auto";
             document.body.appendChild(div);
             let label = document.createElement("label");
             div.appendChild(label);
@@ -31,7 +32,7 @@ var App;
             input_wif.multiple = true;
             input_wif.value = "KwwJMvfFPcRx2HSgQRPviLv4wPrxRaLk7kfQntkH8kCXzTgAts8t";
             input_wif.type = "password";
-            let label_prikey = document.createElement("label");
+            const label_prikey = document.createElement("label");
             div.appendChild(label_prikey);
             label_prikey.textContent = "";
             div.appendChild(document.createElement("br"));
@@ -44,7 +45,8 @@ var App;
             input_prikey.style.position = "absoulte";
             input_prikey.multiple = true;
             input_prikey.value = "";
-            let label_pubkey = document.createElement("label");
+            input_prikey.type = "password";
+            const label_pubkey = document.createElement("label");
             div.appendChild(label_pubkey);
             label_pubkey.textContent = "";
             div.appendChild(document.createElement("br"));

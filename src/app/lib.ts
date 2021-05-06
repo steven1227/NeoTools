@@ -1,13 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 ///<reference path="../../dist/neo-sdk/neo-ts.d.ts"/>
 
-namespace App {
+namespace App{
     export enum KeyType {
         Unknow,
         Simple,
         MultiSign,
     }
-
+    
     export class key
     {
         multisignkey: boolean;
@@ -34,7 +34,7 @@ namespace App {
                 }
             }
         }
-
+    
         GetMultiContract(): Uint8Array {
             if (!(1 <= this.MKey_NeedCount && this.MKey_NeedCount <= this.MKey_Pubkeys.length && this.MKey_Pubkeys.length <= 1024))
                 throw new Error();
@@ -51,7 +51,7 @@ namespace App {
                 return sb.ToArray();
             }
         }
-
+    
         GetAddress(): string {
             if (this.multisignkey == false) {
                 return this.ToString();
@@ -63,7 +63,7 @@ namespace App {
                 return address;
             }
         }
-
+    
         AddPubkey(pubkey: Uint8Array): void {
             for (let i = 0; i < this.MKey_Pubkeys.length; i++) {
                 const k: Uint8Array = this.MKey_Pubkeys[i];
@@ -82,7 +82,6 @@ namespace App {
             });
         }
     }
-
     
     export class Tx {
         txraw: ThinNeo.Transaction;
@@ -117,8 +116,8 @@ namespace App {
             }
             return true;
         }
-
-
+    
+    
         FillRaw() {
             this.txraw.witnesses = new Array<ThinNeo.Witness>(this.keyinfos.keys.length);
             const keys: Array<KeyInfo> = new Array<KeyInfo>();
@@ -152,10 +151,10 @@ namespace App {
                     }
                     this.txraw.witnesses[i].InvocationScript = sb.ToArray();
                 }
-
+    
             }
         }
-
+    
         ToString(): string {
             const ms: Neo.IO.MemoryStream = new Neo.IO.MemoryStream();
             this.txraw.SerializeUnsigned(new Neo.IO.BinaryWriter(ms));
@@ -167,7 +166,7 @@ namespace App {
             }
             return outstr; 
         }
-
+    
         ExoprtKeyInfo(): any {
             const json: Map<string,any> = new Map<string,any>();
             for (const k in this.keyinfos) {
@@ -198,18 +197,18 @@ namespace App {
             }
             return json;
         }
-
+    
         ImportKeyInfo(keys: Array<key>, json:any) {
             console.log(JSON.stringify(keys));
             if (this.keyinfos == null) {
                 this.keyinfos = new Map<string, KeyInfo>();
             }
-
+    
             if (!this.txraw){
                 console.log("没有交易体");
                 return;
             }
-
+    
             for (let i = 0; i < this.txraw.attributes.length; i++) {
                 const att = this.txraw.attributes[i];
                 if (att.usage == ThinNeo.TransactionAttributeUsage.Script) {
@@ -245,7 +244,7 @@ namespace App {
                     }
                 }
             }
-
+    
             //从json导入已经做了的签名
             if (json != null) {
                 for (const k in json) {
@@ -290,7 +289,7 @@ namespace App {
                                     break;
                                 }
                             }
-
+    
                             //没有这个key 直接导入
                             if (_key == null) {
                                 _key = new key();
@@ -306,7 +305,7 @@ namespace App {
                 }
             }
         }
-
+    
         FromString(keys: Array<key>, info: string) {
             let txdata: Uint8Array;
             //有附加信息
@@ -325,9 +324,9 @@ namespace App {
             this.txraw.Deserialize(br);
             this.ImportKeyInfo(keys, keyinfo);
         }
-
+    
     }
-
+    
     export class KeyInfo {
         keyaddress: string;
         type: KeyType;
@@ -335,7 +334,7 @@ namespace App {
         pubKey: Uint8Array;
         signdata: Array<Uint8Array>;
     }
-
+    
     export class Utxo {
         Txid : Neo.Uint256;
         N : number;
@@ -343,7 +342,7 @@ namespace App {
         Asset : string;
         Value : number;
     }
-
+    
     export class TranHelper {
         static makeTranWithUnSign(map_utxos:Map<string,Array<Utxo>>, targetAddr:string, assetid:string, extdata:ThinNeo.InvokeTransData){
             const sendcount = extdata.gas;
@@ -403,10 +402,10 @@ namespace App {
             return tran;
         }
     }
-
+    
     export class NeoRpc {
         static url = "http://seed2.ngd.network:10332";
-
+    
         static makeRpcUrl(url: string, method: string, ..._params: any[])
         {
             if (url[url.length - 1] != '/')
@@ -435,23 +434,35 @@ namespace App {
             body["params"] = params;
             return body;
         }
-
-        static async getunspents(addr: string)
+    
+        static async send(url:string,raw:string){
+            const postdata =
+                NeoRpc.makeRpcPostBody(
+                    "sendrawtransaction",
+                    raw
+                );
+            const result = await fetch(url, { "method": "post", "body": JSON.stringify(postdata) });
+            const json = await result.json();
+            const r = json["result"];
+            return r ? r : json["error"];
+        }
+    
+        static async getunspents(url:string, addr: string)
         {
             const postdata =
                 NeoRpc.makeRpcPostBody(
                     "getunspents",
                     addr
                 );
-            const result = await fetch(NeoRpc.url, { "method": "post", "body": JSON.stringify(postdata) });
+            const result = await fetch(url, { "method": "post", "body": JSON.stringify(postdata) });
             const json = await result.json();
             const r = json["result"];
             return r ? r : [];
         }
-
-        static async getUtxosByAddress(addr:string) 
+    
+        static async getUtxosByAddress(url:string, addr:string) 
         {
-            const balance = (await NeoRpc.getunspents(addr))["balance"];
+            const balance = (await NeoRpc.getunspents(url,addr))["balance"];
             const m : Map<string,Array<Utxo>> = new Map<string,Array<Utxo>>();
             balance.forEach((b: { [x: string]: any; })  => {
                 const unspent = b["unspent"];
@@ -477,3 +488,5 @@ namespace App {
     
     }
 }
+
+

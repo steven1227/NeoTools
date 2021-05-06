@@ -405,18 +405,27 @@ var App;
             body["params"] = params;
             return body;
         }
-        static getunspents(addr) {
+        static send(url, raw) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const postdata = NeoRpc.makeRpcPostBody("sendrawtransaction", raw);
+                const result = yield fetch(url, { "method": "post", "body": JSON.stringify(postdata) });
+                const json = yield result.json();
+                const r = json["result"];
+                return r ? r : json["error"];
+            });
+        }
+        static getunspents(url, addr) {
             return __awaiter(this, void 0, void 0, function* () {
                 const postdata = NeoRpc.makeRpcPostBody("getunspents", addr);
-                const result = yield fetch(NeoRpc.url, { "method": "post", "body": JSON.stringify(postdata) });
+                const result = yield fetch(url, { "method": "post", "body": JSON.stringify(postdata) });
                 const json = yield result.json();
                 const r = json["result"];
                 return r ? r : [];
             });
         }
-        static getUtxosByAddress(addr) {
+        static getUtxosByAddress(url, addr) {
             return __awaiter(this, void 0, void 0, function* () {
-                const balance = (yield NeoRpc.getunspents(addr))["balance"];
+                const balance = (yield NeoRpc.getunspents(url, addr))["balance"];
                 const m = new Map();
                 balance.forEach((b) => {
                     const unspent = b["unspent"];

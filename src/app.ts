@@ -1,11 +1,10 @@
-import { ipcRenderer } from "electron";
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 ///<reference path="../dist/neo-sdk/neo-ts.d.ts"/>
+import {ipcRenderer} from "electron";
 
-namespace App {
+namespace App{
     class Menu
     {
-        div: HTMLDivElement;
         divMenu: HTMLDivElement;
         start(): void
         {
@@ -56,11 +55,13 @@ namespace App {
     
         }
     }
-
+    
     window.onload = () =>
     {
         const m = new Menu();
         m.start();
     };
 }
+
+
 

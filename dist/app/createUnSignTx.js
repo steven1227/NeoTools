@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-///<reference path="../../dist/neo-sdk/neo-ts.d.ts"/>
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,6 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+///<reference path="../../dist/neo-sdk/neo-ts.d.ts"/>
+// import {key, TranHelper, NeoRpc} from "./lib";
 var App;
 (function (App) {
     class CreateUnSignTx {
@@ -19,7 +20,7 @@ var App;
             div.style.top = "50px";
             div.style.bottom = "50px";
             div.style.position = "absolute";
-            div.style.overflow = "hidden";
+            div.style.overflow = "auto";
             document.body.appendChild(div);
             let label = document.createElement("label");
             div.appendChild(label);
@@ -67,7 +68,7 @@ var App;
         "(addr)AeYiwwjiy2nKXoGLDafoTXc1tGvfkTYQcM",
         "(int)100"
     ]
-]`;
+    ]`;
             text_scParams.textContent = defaultParams;
             div.appendChild(document.createElement("br"));
             // label = document.createElement("label");
@@ -126,7 +127,7 @@ var App;
                     extdata.gas = Neo.Fixed8.Zero;
                     extdata.script = data;
                     if (extdata.gas > Neo.Fixed8.Zero) {
-                        const utxos = yield App.NeoRpc.getUtxosByAddress(input_sender.value);
+                        const utxos = yield App.NeoRpc.getUtxosByAddress(App.NeoRpc.url, input_sender.value);
                         tran = App.TranHelper.makeTranWithUnSign(utxos, null, "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7", extdata);
                     }
                     else {
