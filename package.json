@@ -1,6 +1,6 @@
 {
   "name": "neotools",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "hodgepodge",
   "main": "dist/main.js",
   "scripts": {

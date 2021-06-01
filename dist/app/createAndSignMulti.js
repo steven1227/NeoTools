@@ -129,7 +129,7 @@ var App;
             // div.appendChild(document.createElement("br"));
             const btn_sign = document.createElement("button");
             div.appendChild(btn_sign);
-            btn_sign.textContent = "签名(需要先点‘导入数据’让上面的文本框有值)";
+            btn_sign.textContent = "签名";
             div.appendChild(document.createElement("hr"));
             div.appendChild(document.createElement("br"));
             label = document.createElement("label");
@@ -150,10 +150,10 @@ var App;
             input_cliAddr.style.width = "500px";
             input_cliAddr.style.position = "absoulte";
             input_cliAddr.multiple = true;
-            input_cliAddr.value = "http://seed2.ngd.network:10332";
+            input_cliAddr.value = "http://seed5.ngd.network:10332";
             const btn_send = document.createElement("button");
             div.appendChild(btn_send);
-            btn_send.textContent = "上链";
+            btn_send.textContent = "上链（如果隔几秒节点没反馈，把「5」换个数字继续发）";
             div.appendChild(document.createElement("hr"));
             let wallet;
             const reader = new FileReader();
@@ -244,6 +244,9 @@ var App;
             //     updateUI();
             // };
             btn_sign.onclick = () => {
+                sign();
+            };
+            const sign = () => {
                 if (text_data.value == "") {
                     alert("请先构造交易并导入");
                     return;
@@ -283,11 +286,43 @@ var App;
                     alert("没有找到可以签名的");
                 }
                 else {
-                    // updateTxUI();
                     updateDataUI();
                 }
             };
             btn_export.onclick = () => {
+                if (this.keys.length == 0 && text_data.value != "") {
+                    this.tx.FromString(this.keys, text_data.value);
+                    updateUI();
+                    let signcount = 0;
+                    const data = this.tx.txraw.GetMessage();
+                    console.log(this.keys.length);
+                    for (let i = 0; i < this.keys.length; i++) {
+                        const key = this.keys[i];
+                        console.log(key);
+                        if (key.prikey == null)
+                            continue;
+                        const addr = key.GetAddress();
+                        for (const k in this.tx.keyinfos) {
+                            const type = this.tx.keyinfos[k].type;
+                            if (type == App.KeyType.Simple) {
+                                if (k == addr) {
+                                    this.tx.keyinfos[k].signdata[0] = ThinNeo.Helper.Sign(data, key.prikey);
+                                    signcount++;
+                                }
+                            }
+                            if (type == App.KeyType.MultiSign) {
+                                for (let ii = 0; ii < this.tx.keyinfos[k].MultiSignKey.MKey_Pubkeys.length; ii++) {
+                                    const pub = this.tx.keyinfos[k].MultiSignKey.MKey_Pubkeys[ii];
+                                    const signaddr = ThinNeo.Helper.GetAddressFromPublicKey(pub);
+                                    if (addr == signaddr) {
+                                        this.tx.keyinfos[k].signdata[ii] = ThinNeo.Helper.Sign(data, key.prikey);
+                                        signcount++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 updateDataUI(false);
             };
             btn_send.onclick = () => __awaiter(this, void 0, void 0, function* () {
@@ -303,6 +338,7 @@ var App;
                         return;
                     }
                 }
+                console.log(input_cliAddr.value);
                 raw = text_rawdata.value;
                 const result = yield App.NeoRpc.send(input_cliAddr.value, raw);
                 if (JSON.stringify(result) == "true") {
